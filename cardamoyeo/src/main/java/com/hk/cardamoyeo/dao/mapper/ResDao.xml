@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.cardamoyeo.dao.UResDao">
+	<cache/>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.RDto" id="constructorResultMap1">
+		<id column="RES_SEQ" property="res_seq" javaType="int" />
+		<result column="USER_ID" property="user_id" javaType="String" />
+		<result column="CAR_NUM" property="car_num" javaType="String"/>
+		<result column="PAY_DATE" property="pay_date" javaType="java.sql.Timestamp"/>
+		<result column="RES_DATE" property="res_date" javaType="java.sql.Timestamp"/>
+		<result column="RES_PAY" property="res_pay" javaType="String"/>
+		<result column="RES_SUCCESS" property="res_success" javaType="String"/>
+		<result column="STORE_SEQ" property="store_seq" javaType="int"/>
+		<result column="RES_INTIME" property="res_intime" javaType="String"/>
+		<result column="MENU_TYPE" property="menu_type" javaType="String"/>
+		
+		<collection property="SDto" resultMap="constructorResultMap2"/>
+			
+	</resultMap>
+
+	<resultMap type="com.hk.cardamoyeo.dto.SDto" id="constructorResultMap2">
+		<id column="user_id" property="user_id" javaType="String" />
+		<result column="store_seq" property="store_seq" javaType="int"/>
+		<result column="store_name" property="store_name" javaType="String"/>
+		<result column="store_space" property="store_space" javaType="String"/>
+		<result column="store_address" property="store_address" javaType="String"/>
+		<result column="store_content" property="store_content" javaType="String"/>
+		<result column="store_phone" property="store_phone" javaType="String"/>
+		<result column="store_bank" property="store_bank" javaType="String"/>
+		<result column="store_account" property="store_account" javaType="String"/>
+		<result column="store_license_number" property="store_license_number" javaType="String"/>
+		<result column="store_license_image" property="store_license_image" javaType="String"/>
+		<result column="store_latitude" property="store_latitude" javaType="String"/>
+		<result column="STORE_longitude" property="store_longitude" javaType="String"/>
+		<result column="store_time_open" property="store_time_open" javaType="String"/>
+		<result column="store_time_close" property="store_time_close" javaType="String"/>
+	</resultMap>
+	
+
+	<select id="resDao" resultMap="constructorResultMap1" parameterType="com.hk.cardamoyeo.dto.PageUserIdDTO">
+		select res_seq, store_name, menu_type, CAR_NUM, RES_INTIME, RES_DATE, PAY_DATE, RES_PAY, store_seq
+		from (select rownum rn, res_seq, store_name, menu_type, CAR_NUM, RES_INTIME, RES_DATE, PAY_DATE, RES_PAY, store_seq
+		from	(select res_seq, store_name, menu_type, CAR_NUM, RES_INTIME, RES_DATE, PAY_DATE, RES_PAY, s.store_seq
+				from P_RES r, P_STORE s
+				where r.store_seq = s.store_seq
+					and r.user_id = #{user_id}
+				order by res_seq desc))
+		where rn between #{startPage} and #{endPage}
+	</select>
+	
+	<select id="resListCount" resultType="int">
+		select count(*) from p_res
+	</select>
+
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- dbcp처리를 위한 DataSource처리 -->
+
+	<bean name="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName"
+			value="oracle.jdbc.driver.OracleDriver" />
+		<property name="url"
+			value="jdbc:oracle:thin:@localhost:1521:xe" />
+		<property name="username" value="study" />
+		<property name="password" value="study" />
+	</bean>
+
+	<!-- MyBatis 맵퍼의 SQL 문장에 대한 파라미터 및 리턴 타입을 담을 클래스를 검색 할 패키지 지정 -->
+	<!-- myBatis는 sqlSessionFactoryBean클래스와 sqlSessionTemplate클래스의 객체를 이용하여 
+		sql처리 -->
+
+	<bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mapperLocations"
+			value="classpath:com/hk/cardamoyeo/dao/mapper/*.xml" />
+	</bean>
+
+	<!-- mapperLocation 속성은 mapper용 xml파일의 경로 표시 -->
+
+	<!-- sql처리에 필요한 모든 메서드를 가지고 있는 객체 -->
+
+	<bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"></constructor-arg>
+	</bean>
+
+	<!-- 여러개의 파일 업로드를 위한 설정 -->
+	<!-- Transaction 처리를 위한 객체 등록 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- @transactional 어노테이션을 사용해서 진행하겠음 -->
+<!-- 	<tx:annotation-driven -->
+<!-- 		transaction-manager="transactionManager" proxy-target-class="true" /> -->
+
+
+</beans>

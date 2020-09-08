@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.idao">
+
+	<select id="NoticeDao" resultType="com.hk.cardamoyeo.dto.NoticeDto" parameterType="String" >
+		SELECT board_seq, user_id, board_title, board_content, read_count, board_date, board_type
+		FROM (
+			SELECT ROW_NUMBER() OVER(ORDER BY board_date DESC) RN,
+				   board_seq, user_id, board_title, board_content, read_count, board_date, board_type 
+			FROM P_BOARD where board_type='B'
+		)WHERE CEIL(RN/10)=#{pNum, jdbcType=VARCHAR}
+	</select>
+	<!-- #{pcount, jdbcType=VARCHAR} -->
+
+	<select id="pcount" resultType="int">
+		SELECT CEIL(COUNT(*)/10) FROM P_BOARD where board_type='B'
+	</select>
+		
+	<select id="detailBoard" parameterType="int" resultType="com.hk.cardamoyeo.dto.NoticeDto">
+		SELECT * FROM P_BOARD WHERE BOARD_SEQ = #{seq}
+	</select>
+	
+	<insert id="boardWrite" parameterType="com.hk.cardamoyeo.dto.NoticeDto">
+		INSERT INTO P_BOARD (BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_TYPE, USER_ID, READ_COUNT, user_type)
+						VALUES(P_BOARD_SEQ.NEXTVAL,#{board_title},#{board_content},SYSDATE,'B',#{user_id},0,'M')
+	</insert>
+	<select id="modidetailBoard" parameterType="int" resultType="com.hk.cardamoyeo.dto.NoticeDto">
+		SELECT * FROM P_BOARD WHERE BOARD_SEQ = #{seq}
+	</select>
+	<update id="boardModify" parameterType="com.hk.cardamoyeo.dto.NoticeDto">
+		update P_BOARD
+		set board_title =#{board_title}, board_content = #{board_content}, board_date = sysdate
+		where board_seq = #{board_seq}
+	</update>
+	<delete id="boardDelete" parameterType="com.hk.cardamoyeo.dto.NoticeDto">
+		delete from P_BOARD where board_seq = #{board_seq}
+	</delete>
+	<update id="readCount" parameterType="com.hk.cardamoyeo.dto.NoticeDto">
+		update P_BOARD
+		set read_count = read_count + 1
+		where board_seq = #{board_seq}
+	</update>
+</mapper>

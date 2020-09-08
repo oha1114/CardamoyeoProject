@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.cardamoyeo.dao.UReviewDao">
+	<cache/>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.ReviewDto" id="constructorResultMap1">
+		<id column="REVIEW_SEQ" property="review_seq" javaType="int" />
+		<id column="USER_ID" property="user_id" javaType="String" />
+		<id column="STORE_SEQ" property="store_seq" javaType="int"/>
+		<result column="STORE_STAR" property="store_star" javaType="String"/>
+		<result column="REVIEW_CONTENT" property="review_content" javaType="String"/>
+		<result column="REVIEW_DATE" property="review_date" javaType="java.sql.Timestamp"/>
+		
+		<collection property="SDto" resultMap="constructorResultMap2"/>
+		<collection property="UserDto" resultMap="constructorResultMap3"/>
+			
+	</resultMap>
+
+	<resultMap type="com.hk.cardamoyeo.dto.SDto" id="constructorResultMap2">
+		<id column="user_id" property="user_id" javaType="String" />
+		<result column="store_seq" property="store_seq" javaType="int"/>
+		<result column="store_name" property="store_name" javaType="String"/>
+		<result column="store_space" property="store_space" javaType="String"/>
+		<result column="store_address" property="store_address" javaType="String"/>
+		<result column="store_content" property="store_content" javaType="String"/>
+		<result column="store_phone" property="store_phone" javaType="String"/>
+		<result column="store_bank" property="store_bank" javaType="String"/>
+		<result column="store_account" property="store_account" javaType="String"/>
+		<result column="store_license_number" property="store_license_number" javaType="String"/>
+		<result column="store_license_image" property="store_license_image" javaType="String"/>
+		<result column="store_latitude" property="store_latitude" javaType="String"/>
+		<result column="STORE_longitude" property="store_longitude" javaType="String"/>
+		<result column="store_time_open" property="store_time_open" javaType="String"/>
+		<result column="store_time_close" property="store_time_close" javaType="String"/>
+	</resultMap>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.UserDto" id="constructorResultMap3">
+		<id column="user_id" property="user_id" javaType="String" />
+		<result column="USER_NUM" property="user_num" javaType="int"/>
+		<result column="USER_NAME" property="user_name" javaType="String"/>
+		<result column="USER_NIC" property="user_nic" javaType="String"/>
+		<result column="USER_PASS" property="user_pass" javaType="String"/>
+		<result column="USER_PHONE" property="user_phone" javaType="String"/>
+		<result column="USER_EMAIL" property="user_email" javaType="String"/>
+		<result column="USER_ADDRESS" property="user_address" javaType="String"/>
+		<result column="USER_GENDER" property="user_gender" javaType="String"/>
+		<result column="USER_REGDATE" property="user_regdate" javaType="java.sql.Timestamp"/>
+		<result column="USER_ROLE" property="user_role" javaType="String"/>
+		<result column="USER_OUT" property="user_out" javaType="String"/>
+		<result column="OWNER_OK" property="owner_ok" javaType="String"/>
+		<result column="STORE_LICENSE_NUMBER" property="store_license_number" javaType="String"/>
+		<result column="STORE_LICENSE_IMAGE" property="store_license_image" javaType="String"/>
+		<result column="JOIN_OK" property="join_ok" javaType="String"/>
+	</resultMap>
+	
+	
+
+	<select id="rvListDao" resultMap="constructorResultMap1" parameterType="com.hk.cardamoyeo.dto.PageUserIdDTO">
+		Select review_seq, store_seq, store_name, store_star, review_content, user_id, review_date   
+		From (select rownum rn, review_seq,store_seq, store_name, store_star, review_content, user_id, review_date   
+			from (select review_seq, s.store_seq,store_name, store_star, review_content, u.user_id, review_date     
+			from p_user u, p_review r, p_store s     
+			Where u.user_id = r.user_id      
+				And r.store_seq = s.store_seq      
+				And u.user_id = #{user_id}      
+			order by review_seq desc))
+		where rn between #{startPage} and #{endPage}
+	</select>
+
+	<delete id="rvDelDao" parameterType="int">
+		delete from p_review where review_seq = #{review_seq} 
+	</delete>
+	
+	<select id="rvListCount" resultType="int">
+		select count(*) from p_review
+	</select>
+</mapper>

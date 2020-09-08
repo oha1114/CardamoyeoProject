@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.mdao">
+
+	<select id="MapDao" resultType="com.hk.cardamoyeo.dto.SDto" parameterType="map">
+		select * from P_STORE
+		<if test="keyword != null">
+			where store_name like '%'||#{keyword}||'%' or store_address like '%'||#{keyword}||'%'
+		</if>
+
+	</select>
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.rdao">
+	<!-- 댓글 조회 -->
+	<select id="ReplyDao" parameterType="int" resultType="com.hk.cardamoyeo.dto.ReplyDto">
+		SELECT * FROM p_reply where board_seq = #{board_seq} ORDER BY REPLY_DATE DESC
+	</select>
+	<!-- 댓글 작성 -->
+	<insert id="writeReply" parameterType="com.hk.cardamoyeo.dto.ReplyDto">
+		INSERT INTO p_reply (BOARD_SEQ, REPLY_SEQ, USER_ID, REPLY_CONTENT, REPLY_DATE)
+		VALUES(#{board_seq},P_REPLY_SEQ.NEXTVAL,#{user_id},#{reply_content},sysdate)
+	</insert>
+	<!-- 댓글 수정 -->
+	<!-- <update id="updateReply" parameterType="com.hk.cardamoyeo.dto.ReplyDto">
+		update P_REPLY set REPLY_CONTENT = #{reply_content}
+		where reply_seq = #{reply_seq}
+	</update> -->
+	<!-- 댓글 삭제 -->
+	<delete id="QUDelete" parameterType="com.hk.cardamoyeo.dto.ReplyDto">
+		delete from p_reply
+		where reply_seq = #{reply_seq}
+	</delete>
+</mapper>

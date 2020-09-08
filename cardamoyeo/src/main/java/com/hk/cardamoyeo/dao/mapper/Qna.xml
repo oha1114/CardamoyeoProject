@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.qdao">
+
+	<select id="QnaDao" resultType="com.hk.cardamoyeo.dto.QnaDto" parameterType="String">
+		SELECT board_seq, user_id, board_title, board_content, read_count, board_date, board_type,USER_TYPE,board_read, commentCount
+		FROM (
+			SELECT ROW_NUMBER() OVER(ORDER BY board_date DESC) RN,
+				   B.*, (select count(*) from p_reply where board_seq = B.board_seq) as commentCount
+			FROM P_BOARD B where board_type='A' and USER_TYPE='U'
+		)WHERE CEIL(RN/10)=#{pNum, jdbcType=VARCHAR}
+	</select>
+
+	<!-- <select id="QnaDao" resultType="com.hk.cardamoyeo.dto.QnaDto" parameterType="String">
+		SELECT board_seq, user_id, board_title, board_content, read_count, board_date, board_type,USER_TYPE,board_read
+		FROM (
+			SELECT ROW_NUMBER() OVER(ORDER BY board_date DESC) RN,
+				   board_seq, user_id, board_title, board_content, read_count, board_date, board_type,USER_TYPE,board_read
+			FROM P_BOARD where board_type='A' and USER_TYPE='U'
+		)WHERE CEIL(RN/10)=#{pNum, jdbcType=VARCHAR}
+	</select> -->
+	
+	<select id="pcount" resultType="int">
+		SELECT CEIL(COUNT(*)/10) FROM P_BOARD where board_type='A' and USER_TYPE='U'
+	</select>
+	<select id="detailU" parameterType="Map" resultType="com.hk.cardamoyeo.dto.QnaDto">
+		SELECT * FROM P_BOARD WHERE BOARD_SEQ = #{dto.board_seq} 
+		
+		
+		<if test="dto.board_pass != null">
+			and BOARD_PASS = #{dto.board_pass}		
+		</if>
+
+	</select>
+	<insert id="QuWrite" parameterType="com.hk.cardamoyeo.dto.QnaDto">
+		INSERT INTO P_BOARD (BOARD_SEQ, BOARD_TITLE, BOARD_CONTENT, BOARD_DATE, BOARD_TYPE, USER_ID, BOARD_PASS, BOARD_SECRET, USER_TYPE)
+		VALUES(P_BOARD_SEQ.NEXTVAL,#{board_title},#{board_content},SYSDATE,'A',#{user_id},#{board_pass},#{board_secret},'U')
+	</insert>
+	<select id="modidetailU" parameterType="int" resultType="com.hk.cardamoyeo.dto.QnaDto">
+		SELECT * FROM P_BOARD WHERE BOARD_SEQ = #{seq}
+	</select>
+	<update id="QUModify" parameterType="com.hk.cardamoyeo.dto.QnaDto">
+		update P_BOARD
+		set board_title =#{board_title}, board_content = #{board_content}, board_date = sysdate, BOARD_SECRET = #{board_secret}
+		where board_seq = #{board_seq}
+	</update>
+	<delete id="QUDelete" parameterType="com.hk.cardamoyeo.dto.QnaDto">
+		delete from P_BOARD where board_seq = #{board_seq}
+	</delete>
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.cardamoyeo.dao.UQnaDao">
+	<cache/>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.UQnaDto" id="constructorResultMap1">
+		<id column="BOARD_SEQ" property="board_seq" javaType="int" />
+		<id column="USER_ID" property="user_id" javaType="String" />
+		<result column="BOARD_TITLE" property="board_title" javaType="String"/>
+		<result column="BOARD_CONTENT" property="board_content" javaType="String"/>
+		<result column="READ_COUNT" property="read_count" javaType="int"/>
+		<result column="BOARD_DATE" property="board_date" javaType="java.sql.Timestamp"/>
+		<result column="BOARD_PASS" property="board_pass" javaType="String"/>
+		<result column="BOARD_SECRET" property="board_secret" javaType="String"/>
+		<result column="BOARD_READ" property="board_read" javaType="String"/>
+		<result column="BOARD_TYPE" property="board_type" javaType="String"/>
+		<result column="USER_TYPE" property="user_type" javaType="String"/>
+		
+		<collection property="UserDto" resultMap="constructorResultMap2"/>
+			
+	</resultMap>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.UserDto" id="constructorResultMap2">
+		<id column="user_id" property="user_id" javaType="String" />
+		<result column="USER_NUM" property="user_num" javaType="int"/>
+		<result column="USER_NAME" property="user_name" javaType="String"/>
+		<result column="USER_NIC" property="user_nic" javaType="String"/>
+		<result column="USER_PASS" property="user_pass" javaType="String"/>
+		<result column="USER_PHONE" property="user_phone" javaType="String"/>
+		<result column="USER_EMAIL" property="user_email" javaType="String"/>
+		<result column="USER_ADDRESS" property="user_address" javaType="String"/>
+		<result column="USER_GENDER" property="user_gender" javaType="String"/>
+		<result column="USER_REGDATE" property="user_regdate" javaType="java.sql.Timestamp"/>
+		<result column="USER_ROLE" property="user_role" javaType="String"/>
+		<result column="USER_OUT" property="user_out" javaType="String"/>
+		<result column="OWNER_OK" property="owner_ok" javaType="String"/>
+		<result column="STORE_LICENSE_NUMBER" property="store_license_number" javaType="String"/>
+		<result column="STORE_LICENSE_IMAGE" property="store_license_image" javaType="String"/>
+		<result column="JOIN_OK" property="join_ok" javaType="String"/>
+	</resultMap>
+	
+	
+
+	<select id="uQnaListDao" resultMap="constructorResultMap1" parameterType="com.hk.cardamoyeo.dto.PageUserIdDTO">
+		SELECT BOARD_SEQ, BOARD_TITLE, BOARD_DATE, BOARD_READ
+		FROM (select rownum rn, BOARD_SEQ, BOARD_TITLE, BOARD_DATE, BOARD_READ, commentCount
+		from	(select BOARD_SEQ, BOARD_TITLE, BOARD_DATE, BOARD_READ, (select count(*) from p_reply where board_seq = B.board_seq) as commentCount
+				from P_BOARD B, P_USER U
+				WHERE B.USER_ID = U.USER_ID
+					AND U.USER_ID = #{user_id} 
+					AND B.BOARD_TYPE = 'A' 
+				order by board_seq desc))
+		where rn between #{startPage} and #{endPage}
+	</select>
+	
+	<select id="qnaListCount" resultType="int">
+		select count(*) from p_board where board_type = 'A'
+	</select>
+
+</mapper>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.CDao">
+
+	<cache />
+
+	<resultMap type="com.hk.cardamoyeo.dto.FDto"
+		id="storeResultMap1">
+		<id column="store_image_seq" property="store_image_seq" />
+		<result column="store_seq" property="store_seq" javaType="int" />
+		<result column="store_image" property="store_image"
+			javaType="String" />
+
+		<collection property="sdto" resultMap="storeResultMap2" />
+		<collection property="mdto" resultMap="storeResultMap3" />
+		<collection property="rdto" resultMap="storeResultMap4" />
+		<collection property="pdto" resultMap="storeResultMap5" />
+	</resultMap>
+
+	<resultMap type="com.hk.cardamoyeo.dto.SDto" id="storeResultMap2">
+		<id column="store_seq" property="store_seq" />
+		<result column="user_id" property="user_id" javaType="String" />
+		<result column="store_name" property="store_name"
+			javaType="String" />
+		<result column="store_space" property="store_space"
+			javaType="String" />
+		<result column="store_address" property="store_address"
+			javaType="String" />
+		<result column="store_content" property="store_content"
+			javaType="String" />
+		<result column="store_phone" property="store_phone"
+			javaType="String" />
+		<result column="store_bank" property="store_bank"
+			javaType="String" />
+		<result column="store_account" property="store_account"
+			javaType="String" />
+		<result column="store_license_number"
+			property="store_license_number" javaType="String" />
+		<result column="store_license_image"
+			property="store_license_image" javaType="String" />
+	
+		<result column="store_lititude" property="store_lititude"
+			javaType="String" />
+		<result column="store_longitude" property="store_longitude"
+			javaType="String" />
+		
+		<result column="store_time_open" property="store_time_open"
+			javaType="String" />
+		<result column="store_time_close" property="store_time_close"
+			javaType="String" />
+		
+			
+			<collection property="mdto" resultMap="storeResultMap3" />
+			<collection property="pdto" resultMap="storeResultMap5" />
+		
+	</resultMap>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.MDto" id="storeResultMap3">
+		<result column="menu_num" property="menu_num" javaType="int" />
+		<result column="one_time" property="one_time" javaType="String" />
+		<result column="two_time" property="two_time" javaType="String" />
+		<result column="one_day" property="one_day" javaType="String" />
+		<result column="month_time" property="month_time" javaType="String" />
+		<result column="store_money" property="store_money" javaType="String" />
+	</resultMap>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.ReviewDto" id="storeResultMap4">
+		<result column="review_seq" property="review_seq" javaType="int" />
+		<result column="user_id" property="user_id" javaType="String" />
+		<result column="store_star" property="store_star" javaType="String" />
+		<result column="review_content" property="review_content" javaType="String" />
+		<result column="review_date" property="review_date" javaType="java.sql.Timestamp" />
+	</resultMap>
+	
+	
+	<resultMap type="com.hk.cardamoyeo.dto.PDto" id="storeResultMap5">
+		<result column="res_seq" property="res_seq" javaType="int" />
+		<result column="user_id" property="user_id" javaType="String" />
+		<result column="car_num" property="car_num" javaType="String" />
+		<result column="pay_date" property="pay_date" javaType="java.sql.Timestamp" />
+		<result column="res_date" property="res_date" javaType="java.sql.Timestamp" />
+		<result column="res_pay" property="res_pay" javaType="String" />
+		<result column="res_success" property="res_success" javaType="String" />
+		<result column="res_intime" property="res_intime" javaType="String" />
+		<result column="menu_type" property="menu_type" javaType="String" />	
+	</resultMap>
+	
+	
+	 <!-- 회원정보 조회 -->
+     <select id="oinfoDao" parameterType="String" resultType="com.hk.cardamoyeo.dto.LoginDto" >
+		Select user_id, user_pass, user_name, user_nic, user_phone, user_gender, user_email, user_address 
+		from p_user where user_id = #{user_id}
+	</select>
+	 <!-- 회원정보 수정 -->
+	<update id="oupdateInfo" parameterType="com.hk.cardamoyeo.dto.UserDto">
+		update p_user set user_pass = #{user_pass}, user_nic = #{user_nic}, user_phone = #{user_phone}, user_gender = #{user_gender}, 
+			user_address = #{user_address} where user_id = #{user_id}
+	</update>
+	
+	<select id="sListCount" resultType="int">
+		select count(*) from p_store
+	</select>
+	
+	<select id="srListCount" resultType="int">
+		select count(*) from p_res
+	</select>
+
+	<select id="list" resultType="com.hk.cardamoyeo.dto.SDto" parameterType="com.hk.cardamoyeo.dto.PageUserIdDTO">
+		SELECT store_seq, store_name
+		from (select rownum rn, store_seq,store_name
+			from (select store_seq, store_name from p_store
+		where user_id=#{user_id}
+		order by store_seq desc))
+		where rn between #{startPage} and #{endPage}
+		
+	</select>
+	<insert id="write" parameterType="com.hk.cardamoyeo.dto.SDto">
+		insert into p_store
+		(STORE_SEQ, user_id, STORE_NAME,STORE_SPACE, store_bank, store_account,STORE_ADDRESS,STORE_LATITUDE,STORE_LONGITUDE,STORE_CONTENT,STORE_PHONE, STORE_TIME_OPEN,STORE_TIME_CLOSE, store_license_number, store_license_image)
+		values
+		(p_store_seq.NEXTVAL,#{user_id}, #{store_name},#{store_space},#{store_bank},#{store_account},#{store_address},#{store_latitude},#{store_longitude},#{store_content},#{store_phone},#{store_time_open},#{store_time_close}, #{store_license_number},#{store_license_image})
+		<selectKey keyProperty="store_seq" resultType="Integer" order="AFTER">select p_store_seq.currval from dual</selectKey>
+	</insert>
+
+	<insert id="fileUpload"
+		parameterType="com.hk.cardamoyeo.dto.FDto">
+		INSERT INTO P_STORE_IMAGE (STORE_SEQ, STORE_IMAGE_SEQ,STORE_IMAGE)
+		VALUES (#{store_seq}, P_STORE_IMAGE_SEQ.NEXTVAL, #{store_image})
+	</insert>
+	
+	<insert id="writeMenu" parameterType="com.hk.cardamoyeo.dto.MDto">
+		insert into p_menu(store_seq,menu_num, one_time, two_time, one_day, month_time, store_money)
+		values(#{store_seq}, P_MENU_SEQ.nextval, #{one_time},#{two_time},#{one_day},#{month_time},#{store_money})	
+	</insert>
+
+
+	<select id="writeView" parameterType="int" resultMap="storeResultMap1">
+		select s.store_seq, store_name, store_space, store_address, store_latitude, store_longitude,store_content, store_bank , store_account, store_phone,store_time_open, store_time_close, i.store_image, i.store_image_seq,
+				m.menu_num, m.one_time, m.two_time, m.one_day, m.month_time, m.store_money
+		from p_store s, p_store_image i, p_menu m
+		where s.store_seq = i.store_seq
+		and i.store_seq = m.store_seq
+		and s.store_seq =#{store_seq}
+	</select>
+	
+	<select id="reviewView" parameterType="int" resultMap="storeResultMap1">
+		select s.store_seq, r.user_id, r.review_seq, r.store_star, r.review_content, r.review_date
+		from p_store s, p_review r
+		where s.store_seq = r.store_seq
+		and s.store_seq=#{store_seq}
+	</select>
+
+	<update id="modify" parameterType="com.hk.cardamoyeo.dto.SDto">
+		update p_store
+		set
+		store_name=#{store_name}, store_space=#{store_space},
+		store_address=#{store_address}, 
+		store_content=#{store_content},store_phone=#{store_phone},store_time_open=#{store_time_open},store_time_close=#{store_time_close}
+		where store_seq=#{store_seq}
+	</update>
+	
+	<update id="fileUpdate" parameterType="com.hk.cardamoyeo.dto.FDto">
+		update p_store_image
+		set store_image = #{store_image}
+		where store_image_seq=#{store_image_seq}
+	</update>
+	
+	<update id="menuUpdate" parameterType="com.hk.cardamoyeo.dto.MDto">
+		update p_menu
+		set one_time=#{one_time}, two_time=#{two_time}, one_day=#{one_day}, month_time=#{month_time}, store_money=#{store_money}
+		where menu_num =#{menu_num}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from p_store where
+		store_seq=#{store_seq}
+	</delete>
+	
+	<insert id="reviewWrite" parameterType="com.hk.cardamoyeo.dto.ReviewDto">
+	
+		insert into p_review (store_seq, review_seq ,user_id, store_star, review_content, review_date)
+		values(#{store_seq}, p_review_seq.nextval,#{user_id},  #{store_star}, #{review_content}, SYSDATE)
+	</insert>
+	
+	<delete id="rvDel" parameterType="int">
+		delete from p_review
+		where review_seq=#{review_seq}
+	</delete>
+	
+	<select id="resView" parameterType="int" resultMap="storeResultMap1">
+		select s.store_seq, s.user_id, store_name, store_address, one_time, two_time, one_day, month_time, store_money
+		from p_store s, p_menu m
+		where s.store_seq = m.store_seq
+		and s.store_seq= #{store_seq}
+	</select>
+	
+	<insert id="resInsert" parameterType="com.hk.cardamoyeo.dto.PDto">
+		insert into p_res(store_seq, res_seq, user_id, car_num, res_date, res_pay, res_intime, menu_type)
+		values(#{store_seq}, p_res_seq.nextval, #{user_id}, #{car_num},#{res_date},#{res_pay},#{res_intime},#{menu_type})
+		<selectKey keyProperty="res_seq" resultType="Integer"
+			order="AFTER">select p_res_seq.currval from dual</selectKey>
+	</insert>
+	
+	<select id="resCon" parameterType="int" resultMap="storeResultMap1">
+		select s.store_seq, store_name, store_address, r.res_seq, car_num, res_intime, res_date, res_pay, menu_type, m.menu_num, one_time, two_time, one_day, month_time
+		from p_store s, p_res r, p_menu m
+		where s.store_seq = r.store_seq
+		and r.store_seq = m.store_seq
+		and r.res_seq=#{res_seq}
+	</select>
+	
+	<select id="resList" parameterType="int" resultMap="storeResultMap1">
+		select *
+		from p_res
+		where res_seq=#{res_seq}
+	</select>
+	
+	<update id="resUpdate" parameterType="com.hk.cardamoyeo.dto.PDto">
+		update p_res
+		set pay_date =#{pay_date}, res_success='Y'
+		where res_seq= #{res_seq}
+	</update>
+
+	
+	<select id="srlist"  parameterType="com.hk.cardamoyeo.dto.PageUserIdDTO" resultMap="storeResultMap1">
+		select res_seq, user_id, store_seq, store_name, menu_type, CAR_NUM, RES_INTIME, RES_DATE, PAY_DATE, RES_PAY
+		from (select rownum rn, res_seq, user_id, store_seq, store_name, menu_type, CAR_NUM, RES_INTIME, RES_DATE, PAY_DATE, RES_PAY
+		from (select res_seq, r.user_id,s.store_seq, store_name, menu_type, CAR_NUM, RES_INTIME, RES_DATE, PAY_DATE, RES_PAY 
+		from P_RES r, P_STORE s
+		where r.store_seq = s.store_seq
+		and s.user_id = #{user_id}
+		order by res_seq desc))
+		where rn between #{startPage} and #{endPage}
+	</select>
+	
+	<select id="reviewIf" resultType="com.hk.cardamoyeo.dto.RDto" parameterType="com.hk.cardamoyeo.dto.RDto">
+		select * 
+		from p_res
+		where store_seq = #{store_seq} and user_id = #{user_id}
+	</select>
+	
+	<insert id="likeOk" parameterType="com.hk.cardamoyeo.dto.LDto">
+		insert into p_like(like_list_seq, user_id, store_seq, like_regdate)
+		values(p_like_seq.nextval, #{user_id}, #{store_seq}, sysdate)
+	</insert>
+	
+	<delete id="likeNo" parameterType="com.hk.cardamoyeo.dto.LDto">
+		delete from p_like
+		where user_id =#{user_id} and store_seq =#{store_seq}
+	</delete>
+	
+	<select id="likeIf" resultType="com.hk.cardamoyeo.dto.LDto" parameterType="com.hk.cardamoyeo.dto.LDto">
+		select * 
+		from p_like
+		where store_seq = #{store_seq} and user_id = #{user_id}
+	</select>
+	
+	<select id="totalS" resultType="com.hk.cardamoyeo.dto.ReviewDto" parameterType="com.hk.cardamoyeo.dto.ReviewDto">
+		select lower(avg(store_star)) store_star
+		from p_review
+		where store_seq = #{store_seq}
+		group by store_seq
+	</select>
+	
+</mapper>

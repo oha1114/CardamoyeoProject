@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.UserDaoInterface">
+	<cache/>
+	
+	<insert id="GetKey" parameterType="Map">
+		update p_user set join_ok = #{param2} where user_id = #{param1}
+	</insert>
+	
+	<update id="alter_userKey" parameterType="Map">
+		update p_user set join_ok = 'Y' where user_id = #{param1} and join_ok = #{param2}
+	</update>
+	
+	<select id="findId" resultType="String">
+		select NVL(user_id, 0) from p_user
+		where user_name = #{user_name} and user_email = #{user_email} and join_ok = 'Y'
+	</select>
+	
+	<!-- 회원 임시 비밀번호 -->
+	<update id="findPassword" parameterType="Map">
+		update p_user set user_pass = #{param3} where user_id = #{param1} and user_email = #{param2}
+	</update>
+	
+	<select id="userInfo" resultType="com.hk.cardamoyeo.dto.UserDto">
+		select user_id from p_user where user_id = #{user_id}
+	</select>
+	<!-- 
+	<select id="confirm" resultType="String">
+		select count(*) from p_user
+        where user_id=#{user_id} and user_pass=#{user_pass}
+	</select>
+	 -->
+</mapper>

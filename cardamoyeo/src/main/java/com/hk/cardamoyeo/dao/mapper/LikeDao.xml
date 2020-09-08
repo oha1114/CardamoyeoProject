@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hk.cardamoyeo.dao.ULikeDao">
+	<cache/>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.LDto" id="constructorResultMap1">
+		<id column="like_list_seq" property="like_list_seq" javaType="int" />
+		<result column="user_id" property="user_id" javaType="String" />
+		<result column="store_seq" property="store_seq" javaType="int"/>
+		<result column="like_regdate" property="like_regdate" javaType="java.sql.Timestamp"/>
+		
+		<collection property="SDto" resultMap="constructorResultMap2"/>
+			
+	</resultMap>
+	
+	<resultMap type="com.hk.cardamoyeo.dto.SDto" id="constructorResultMap2">
+		<id column="user_id" property="user_id" javaType="String" />
+		<result column="store_seq" property="store_seq" javaType="int"/>
+		<result column="store_name" property="store_name" javaType="String"/>
+		<result column="store_space" property="store_space" javaType="String"/>
+		<result column="store_address" property="store_address" javaType="String"/>
+		<result column="store_content" property="store_content" javaType="String"/>
+		<result column="store_phone" property="store_phone" javaType="String"/>
+		<result column="store_bank" property="store_bank" javaType="String"/>
+		<result column="store_account" property="store_account" javaType="String"/>
+		<result column="store_license_number" property="store_license_number" javaType="String"/>
+		<result column="store_license_image" property="store_license_image" javaType="String"/>
+		<result column="store_latitude" property="store_latitude" javaType="String"/>
+		<result column="STORE_longitude" property="store_longitude" javaType="String"/>
+		<result column="store_time_open" property="store_time_open" javaType="String"/>
+		<result column="store_time_close" property="store_time_close" javaType="String"/>
+	</resultMap>
+	
+	<select id="listDao" resultMap="constructorResultMap1" parameterType="com.hk.cardamoyeo.dto.PageUserIdDTO">
+		Select like_list_seq, store_seq, store_name, like_Regdate
+		from (select rownum rn, like_list_seq, store_seq,store_name, like_Regdate
+			from	(select like_list_seq, S.store_seq, store_name, like_Regdate
+				from p_like L, p_store S 
+				where L.store_seq = S.store_seq
+					and L.user_id = #{user_id}
+				order by L.like_list_seq desc))
+		where rn between #{startPage} and #{endPage}
+	</select>
+	
+	<delete id="deleteDao" parameterType="int">
+		delete from p_like where like_List_Seq = #{likeListSeq} 
+	</delete>
+	
+	<select id="likeListCount" resultType="int">
+		select count(*) from p_like
+	</select>
+</mapper>

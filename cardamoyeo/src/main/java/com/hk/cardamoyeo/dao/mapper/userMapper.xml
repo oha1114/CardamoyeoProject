@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="userMapper">
+	<cache/>
+	<select id="idCheck" resultType="int">
+		<![CDATA[
+			SELECT count(user_id) FROM p_user
+			WHERE user_id = #{userId}
+		]]>
+	</select>
+	
+	<select id="emailCheck" resultType="int">
+		<![CDATA[
+			SELECT count(user_email) FROM p_user
+			WHERE user_email = #{userEmail}
+		]]>
+	</select>
+	
+	<select id="login" resultType="com.hk.cardamoyeo.dto.LoginDto" parameterType="string">
+		select * from p_user where user_id = #{bId} and join_ok = 'Y'
+	</select>
+
+	
+	<insert id="join" parameterType="com.hk.cardamoyeo.dto.UserDto" >
+		INSERT INTO p_user (USER_NUM,USER_ID,USER_NAME,USER_NIC,USER_PASS,USER_PHONE,USER_EMAIL,USER_ADDRESS,USER_GENDER,USER_REGDATE,USER_ROLE,USER_OUT,STORE_LICENSE_NUMBER,STORE_LICENSE_IMAGE,join_ok )
+				 VALUES (P_USER_SEQ.NEXTVAL,#{user_id},#{user_name},#{user_nic},#{user_pass},#{user_phone},#{user_email},#{user_address},#{user_gender},SYSDATE,#{user_role},'N',0,0,'N')
+	</insert>
+	
+	<insert id="join1" parameterType="com.hk.cardamoyeo.dto.UserDto">
+		INSERT INTO p_user (USER_NUM,USER_ID,USER_NAME,USER_NIC,USER_PASS,USER_PHONE,USER_EMAIL,USER_ADDRESS,USER_GENDER,USER_REGDATE,USER_ROLE,USER_OUT,OWNER_OK,STORE_LICENSE_NUMBER,STORE_LICENSE_IMAGE,join_ok )
+				 VALUES (P_USER_SEQ.NEXTVAL,#{user_id},#{user_name},#{user_nic},#{user_pass},#{user_phone},#{user_email},#{user_address},#{user_gender},SYSDATE,#{user_role},'N',#{owner_ok},#{store_license_number},#{store_license_image},'N')
+	</insert>
+	
+
+	<update id="updateInfo" parameterType="com.hk.cardamoyeo.dto.UserDto">
+		update p_user set user_pass = #{user_pass}, user_nic = #{user_nic}, user_phone = #{user_phone}, user_gender = #{user_gender}, 
+			user_address = #{user_address} where user_id = #{user_id}
+	</update>
+
+	<!--  회원 탈퇴  -->
+    <delete id="userDelDao" parameterType="String">
+        delete from p_user
+        where user_id = #{user_id}
+    </delete>
+    
+    <!-- delete from p_user where user_id = (select user_id from p_user where user_id = #{user_id} and user_pass = #{user_pass}) -->
+     
+     <!-- 회원정보 조회 -->
+     <select id="infoDao" parameterType="String" resultType="com.hk.cardamoyeo.dto.LoginDto" >
+		Select user_id, user_pass, user_name, user_nic, user_phone, user_gender, user_email, user_address 
+		from p_user where user_id = #{user_id}
+	</select>
+	
+	<!-- 비밀번호 체크 -->
+    <select id="passChk" resultType="int" parameterType="com.hk.cardamoyeo.dto.UserDto">
+    	select count(*) from p_user
+    	where user_id = #{user_id} and user_pass = #{user_pass}
+    </select>
+    
+</mapper>

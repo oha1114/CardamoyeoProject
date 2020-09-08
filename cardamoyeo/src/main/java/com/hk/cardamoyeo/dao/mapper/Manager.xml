@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hk.cardamoyeo.dao.mgdao">
+
+	<!-- <select id="UserManager" resultType="com.hk.cardamoyeo.dto.UserDto" parameterType="String">	
+		select * from P_USER where user_role = 'U'
+	</select> -->
+	<!-- <select id="OwnerManager" resultType="com.hk.cardamoyeo.dto.UserDto" parameterType="String">	
+		select * from P_USER where user_role = 'O'
+	</select> -->	
+	
+	<select id="UserManager" resultType="com.hk.cardamoyeo.dto.UserDto" parameterType="map">
+		select * from P_USER
+		<if test="keyword != null">
+			where (user_id like '%'||#{keyword}||'%' or user_name like '%'||#{keyword}||'%')
+			and user_role = 'U'
+		</if>
+	</select>	
+	
+	<select id="OwnerManager" resultType="com.hk.cardamoyeo.dto.UserDto" parameterType="map">	
+		select * from P_USER
+		<if test="keyword != null">
+			where (user_id like '%'||#{keyword}||'%' or user_name like '%'||#{keyword}||'%')
+			and user_role = 'O'
+		</if>		
+	</select>
+	
+	<delete id="UserDelete" parameterType="int">
+		delete from P_USER where user_num = #{user_num}
+	</delete>
+	
+	<delete id="OwnerDelete" parameterType="int">
+		delete from P_USER where user_num = #{user_num}
+	</delete>
+</mapper>
