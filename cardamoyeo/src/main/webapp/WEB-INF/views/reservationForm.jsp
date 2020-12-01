@@ -113,10 +113,10 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-7">
-						<h1 class="text-white font-weight-bold">reservationForm</h1>
+						<h1 class="text-white font-weight-bold">결제</h1>
 						<div class="custom-breadcrumbs">
 							<a href="#">Home</a> <span class="mx-2 slash">/</span> <span
-								class="text-white"><strong>reservationForm</strong></span>
+								class="text-white"><strong>Reservation</strong></span>
 						</div>
 					</div>
 				</div>

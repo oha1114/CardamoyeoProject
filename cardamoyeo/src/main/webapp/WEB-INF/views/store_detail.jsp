@@ -225,11 +225,10 @@ span.star-prototype>* {
 			<div class="container">
 				<div class="row">
 					<div class="col-md-7">
-						<h1 class="text-white font-weight-bold">Store_detail</h1>
+						<h1 class="text-white font-weight-bold">매장상세페이지</h1>
 						<div class="custom-breadcrumbs">
-							<a href="index.html">Home</a> <span class="mx-2 slash">/</span> <a
-								href="portfolio.html">Portfolio</a> <span class="mx-2 slash">/</span>
-							<span class="text-white"><strong>Store_detail</strong></span>
+							<a href="index.html">Home</a> <span class="mx-2 slash">/</span>
+							<span class="text-white"><strong>Store_Detail</strong></span>
 						</div>
 					</div>
 				</div>

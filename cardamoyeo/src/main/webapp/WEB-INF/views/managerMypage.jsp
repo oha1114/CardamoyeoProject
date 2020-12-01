@@ -98,16 +98,15 @@
     </header>
 
 
-		<!-- HOME -->
-	<section class="section-hero overlay inner-page bg-image" style="background-image: url('images/bg_parking.jpg');" id="home-section">
+	<!-- HOME -->
+    <section class="section-hero overlay inner-page bg-image" style="background-image: url('images/bg_parking.jpg');" id="home-section">
       <div class="container">
         <div class="row">
           <div class="col-md-7">
-            <h1 class="text-white font-weight-bold"><a href="managerMapage" class="text-white">관리자 마이페이지</a></h1>
+            <h1 class="text-white font-weight-bold">마이페이지</h1>
             <div class="custom-breadcrumbs">
-<!--               <a href="#">Home</a> <span class="mx-2 slash">/</span>
-              <a href="#">Job</a> <span class="mx-2 slash">/</span>
-              <span class="text-white"><strong>Post a Job</strong></span> -->
+              <a href="<%=request.getContextPath()%>">Home</a> <span class="mx-2 slash">/</span>
+              <span class="text-white"><strong>Mypage</strong></span>
             </div>
           </div>
         </div>
@@ -132,7 +131,7 @@
         <div class="row">          
           <div class="col-6 col-md-6 col-lg-6 mb-4 mb-lg-5">           
             <a href="userManager" class="block__16443 text-center d-block">
-              <span class="custom-icon mx-auto"><span class="icon-trophy d-block"></span></span>
+              <span class="custom-icon mx-auto"><span class="icon-user d-block"></span></span>
               <h3>사용자 정보관리</h3>
             </a>            
 			<input type="hidden" id="user_id" name="user_id" value="${user_id }">

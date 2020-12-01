@@ -215,13 +215,15 @@
 			<div class="container">
 
 				<div class="row align-items-center mb-5">
+				<!-- 
 					<div class="col-lg-8 mb-4 mb-lg-0">
 						<div class="d-flex align-items-center">
 							<div>
-								<h2>store_updateForm</h2>
+								<h2>매장등록</h2>
 							</div>
 						</div>
 					</div>
+				 -->
 
 					<div class="col-lg-4">
 						<div class="row"></div>

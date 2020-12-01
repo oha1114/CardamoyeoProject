@@ -113,7 +113,7 @@
           <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
 
             <a href="ownerInfo?user_id=${user_id }" class="block__16443 text-center d-block">
-              <span class="custom-icon mx-auto"><span class="icon-magnet d-block"></span></span>
+              <span class="custom-icon mx-auto"><span class="icon-user d-block"></span></span>
               <h3>회원정보관리</h3>
             </a>
           </div>
@@ -135,7 +135,7 @@
           <div class="col-6 col-md-6 col-lg-4 mb-4 mb-lg-5">
             
             <a href="sResList?user_id=${user_id}&store_seq=${list[0].store_seq}" class="block__16443 text-center d-block">
-              <span class="custom-icon mx-auto"><span class="icon-search d-block"></span></span>
+              <span class="custom-icon mx-auto"><span class="icon-credit-card d-block"></span></span>
               <h3>결제 내역관리</h3>
             </a>
 
