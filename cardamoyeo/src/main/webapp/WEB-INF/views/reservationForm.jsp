@@ -107,7 +107,6 @@
       </div>
     </header>
 
-
 		<!-- HOME -->
 			<section class="section-hero overlay inner-page bg-image" style="background-image: url('images/bg_parking.jpg');" id="home-section">
 			<div class="container">

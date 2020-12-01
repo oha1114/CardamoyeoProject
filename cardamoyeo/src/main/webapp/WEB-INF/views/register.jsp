@@ -39,8 +39,7 @@
 		$("#frm").submit(
 				function() {
 					
-					var idx = false;
-					var emx = false;
+					//var idx = false;
 					
 					if ($("#user_id").val() == "") {
 						$("#user_id").focus();
@@ -53,11 +52,7 @@
 						alert("아이디 중복확인을 확인하세요.");
 						return false;
 					}
-					
-					if(emx == false) {
-						alert("이메일 중복확인을 확인하세요.");
-						return false;
-					}
+
 					
 					if ($("#user_pass").val() == "") {
 						$("#user_pass").focus();
@@ -73,8 +68,7 @@
 							return false;
 						}	
 					}
-					
-					
+										
 					
 					if ($("#user_name").val() == "") {
 						$("#user_name").focus();
@@ -119,9 +113,8 @@
 			});
 		});
 	});
-	
 	$(document).ready(function(e){
-		var emx = false;
+		var idx = false;
 		$('#emailCk').click(function(){
 			$.ajax({
 				url: "${pageContext.request.contextPath}/emailCheck",
@@ -131,7 +124,7 @@
 				},
 				success: function(data){
 					if(data == 0 && $.trim($('#user_email').val()) != '' ){
-						emx=true;
+						idx=true;
 						$('#user_email').attr("readonly",true);
 						var html="<tr><td colspan='3' style='color: green'>사용가능한 이메일 입니다.</td></tr>";
 						$('#emailCheck').empty();
@@ -149,6 +142,8 @@
 			});
 		});	
 	});
+
+	
    </script>
 
     <style>

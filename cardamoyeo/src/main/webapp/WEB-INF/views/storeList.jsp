@@ -138,8 +138,9 @@
 							<table class="table table-hover">
 								<thead>
 									<tr align="center">
-										<th>번호</th>
+										<th style="width:210px;">번호</th>
 										<th>주차장명</th>
+										<th>삭제</th>
 									</tr>
 								</thead>
 								<c:if test="${!empty list }">
@@ -153,42 +154,31 @@
 												<!-- index : 0 ~ , count : 1 ~ -->
 											</td>
 											<td style="font-family: Tahoma; font-size: 10pt;">
-												<div align="left">
-													
+												<div align="center">
 													<a href="storeDetail?store_seq=${store.store_seq }">${store.store_name}</a>
 												</div>
 											</td>
-											<td style="font-family: Tahoma; font-size: 10pt;">
-												<div align="center"></div>
-											</td>
-											<td style="font-family: Tahoma; font-size: 10pt;">
-												<div align="center">
-													<a href="#"></a>
-												</div>
-											</td>
+											<td><a href="delete?store_seq=${store.store_seq }&user_id=${user_id}" onclick="return alert('등록 해제되었습니다.');" class="btn btn-primary btn-xs">삭제</a></td>
 										</tr>
 									</c:forEach>
 									
 									<tr>
-										<td colspan="2" style = "text-align:right"><a href="storeForm">매장등록</a></td>
+										<td colspan="3" style = "text-align:right"><a href="storeForm">매장등록</a></td>
 									</tr>
-									<tr align=center>
-										<td>
-
-											<div class="row pagination-wrap">
-												<div class="col-md-12 text-center text-md-right">
+									
+									<tr align="center">
+										<td colspan="4">
+					  						<div class="row pagination-wrap">
+												<div class="col-md-7 text-center text-md-right">
 													<div class="custom-pagination ml-auto">
-														
 														<div class="d-inline-block">
-															<jsp:include page="../views/public/includePage.jsp"></jsp:include><br/>
+															<jsp:include page="../views/public/includePage.jsp"></jsp:include><br />
 														</div>
-														
 													</div>
 												</div>
 											</div>
-
-										</td>
-									</tr>
+				    					</td>
+				  					</tr>
 								</c:if>
 
 								<c:if test="${empty list }">
